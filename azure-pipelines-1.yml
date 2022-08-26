@@ -1,0 +1,51 @@
+trigger:
+  - none
+
+pool:
+  vmImage: "ubuntu-latest"
+
+stages:
+  - stage: build
+    jobs:
+          - job: 'j1'
+            steps:
+            - task: Bash@3
+              inputs:
+                targetType: 'inline'
+                script: |
+                  # Write your commands here
+                  
+                  echo 'Hello world'
+        
+  - stage: Prod
+    displayName: Prod
+    jobs:
+      - job: j2
+        pool: server
+        steps:
+            - task: ServiceNow-DevOps-Server-Change-Acceleration@1
+              inputs:
+                connectedServiceName: 'empdsingh4-TestReleasePipeline-ServiceNow DevOps Service Connection'
+                UpstreamJob: 'j1'
+            
+      - job: j3
+        pool: server
+        steps:
+            - task: ServiceNow-DevOps-Server-Change-Acceleration@1
+              inputs:
+                connectedServiceName: 'empdsingh4-TestReleasePipeline-ServiceNow DevOps Service Connection'
+                UpstreamJob: 'j2'
+      - job: j4
+        pool: server
+        steps:
+            - task: ServiceNow-DevOps-Server-Change-Acceleration@1
+              inputs:
+                connectedServiceName: 'empdsingh4-TestReleasePipeline-ServiceNow DevOps Service Connection'
+                UpstreamJob: 'j3'
+      - job: j5
+        pool: server
+        steps:
+            - task: ServiceNow-DevOps-Server-Change-Acceleration@1
+              inputs:
+                connectedServiceName: 'empdsingh4-TestReleasePipeline-ServiceNow DevOps Service Connection'
+                UpstreamJob: 'j4'
